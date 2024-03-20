@@ -18,15 +18,15 @@ class SignalFormular(ctk.CTkFrame):
 
         match mode:
             case "Square Wave":
-                self.text = f"{augs['weight']} * Square Wave(A={augs['A']},T={augs['T']},Duty Ratio={augs['Duty Ratio']})"
+                self.text = f"{augs['weight']} * Square Wave(A={augs['A']},w={augs['w']},Duty Ratio={augs['Duty Ratio']})"
             case "Triangle Wave":
                 self.text = (
-                    f"{augs['weight']} * Triangle Wave(A={augs['A']},T={augs['T']})"
+                    f"{augs['weight']} * Triangle Wave(A={augs['A']},w={augs['w']})"
                 )
             case "Sine Wave":
-                self.text = f"{augs['weight']}*{augs['A']}*sin(2*pi/{augs['T']}*x+{augs['phi']})"
+                self.text = f"{augs['weight']}*{augs['A']}*sin(2*pi*{augs['w']}*x+{augs['phi']})"
             case "Cosine Wave":
-                self.text = f"{augs['weight']}*{augs['A']}*cos(2*pi/{augs['T']}*x+{augs['phi']})"
+                self.text = f"{augs['weight']}*{augs['A']}*cos(2*pi*{augs['w']}*x+{augs['phi']})"
             case "Uniform":
                 self.text = f"{augs['weight']}*Uniform({augs['low']},{augs['up']})"
             case "Gaussion":
@@ -49,7 +49,7 @@ class SignalFormular(ctk.CTkFrame):
 
     def check(self, augs: dict):
         for key, value in augs.items():
-            if value == "0" and ((key != "phi") and (key != "low") and (key != "u")):
+            if value == 0 and ((key != "phi") and (key != "low") and (key != "u")):
                 text = f'The "{key}" can not equal zero.'
                 sub_window(text)
                 break

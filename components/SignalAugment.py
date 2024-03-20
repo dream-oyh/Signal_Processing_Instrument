@@ -58,5 +58,10 @@ class SignalAugment(ctk.CTkFrame):
             if aug.entry.cget("state") == "normal":
                 key: str = aug.augment_label.cget("text")
                 value: int | float = aug.entry.get()
-                aug_dict[key] = value
+                aug_dict[key] = float(value)
         return mode, aug_dict
+
+    def get_x_info(self):
+        duration = self.augment_group.augment_entry_list[0].get()
+        sample_freq = self.augment_group.augment_entry_list[1].get()
+        return duration, sample_freq

@@ -4,7 +4,7 @@ PERIO_AUG_OPTION: list[str] = [
     "Duration",
     "Sample Rate",
     "A",
-    "T",
+    "w",
     "phi",
     "Duty Ratio",
     "weight",
@@ -16,7 +16,13 @@ PERIO_SIGNAL_LIST: list[str] = [
     "Sine Wave",
     "Cosine Wave",
 ]
-RANDOM_AUG_OPTION: list[str] = ["Duration", "Sample Rate", "low", "up", "weight"]
+RANDOM_AUG_OPTION: list[str] = [
+    "Duration/s",
+    "Sample Frequency/Hz",
+    "low",
+    "up",
+    "weight",
+]
 RANDOM_DEFAULT_VALUE: list[int | float] = [100, 0.01, 0, 1, 0.5]
 RANDOM_SIGNAL_LIST: list[str] = ["Uniform", "Gaussion"]
 

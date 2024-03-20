@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 from components.CustomSignalAug import CustomSignalAug
 from components.MyCanvas import MyCanvas
-from components.PerioSignalAugment import SignalAugment
+from components.SignalAugment import SignalAugment
 from components.SignalGroup import SignalGroup
 from utils import (
     PERIO_AUG_OPTION,
