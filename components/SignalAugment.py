@@ -1,3 +1,5 @@
+import logging
+
 import customtkinter as ctk
 
 from components.AugEntry import AugmentEntry, AugmentEntryGroup
@@ -42,11 +44,13 @@ class SignalAugment(ctk.CTkFrame):
 
     def add_first_group(self):
         mode, aug_dict = self.get_signal_info()
+        logging.info(mode, aug_dict)
         first_group: SignalGroup = self.master.first_group
         first_group.add_signal(mode, augs=aug_dict)
 
     def add_second_group(self):
         mode, aug_dict = self.get_signal_info()
+        logging.info(mode, aug_dict)
         second_group: SignalGroup = self.master.second_group
         second_group.add_signal(mode, augs=aug_dict)
 
@@ -54,7 +58,7 @@ class SignalAugment(ctk.CTkFrame):
         aug_list: list[AugmentEntry] = self.augment_group.augment_entry_list
         mode: str = self.signal_option.get()
         aug_dict = {}
-        for aug in aug_list[2:]:
+        for aug in aug_list:
             if aug.entry.cget("state") == "normal":
                 key: str = aug.augment_label.cget("text")
                 value: int | float = aug.entry.get()

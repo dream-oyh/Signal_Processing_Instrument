@@ -9,10 +9,14 @@ class CustomSignalAug(ctk.CTkFrame):
         self.open_file = ctk.CTkButton(
             self, text="Open File", fg_color="lightblue", text_color="black"
         )
+        self.file_name = ctk.CTkLabel(
+            self, text="There is no file open.", wraplength=450
+        )
         self.add_first_button = ctk.CTkButton(self, text="Add First Group")
         self.add_second_button = ctk.CTkButton(self, text="Add Second Group")
 
         self.label_text.grid(row=0, column=0, columnspan=2, padx=10, pady=5)
         self.open_file.grid(row=1, column=0, columnspan=2, padx=10, pady=5)
-        self.add_first_button.grid(row=2, column=0, padx=10, pady=10)
-        self.add_second_button.grid(row=2, column=1, padx=10, pady=10)
+        self.file_name.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
+        self.add_first_button.grid(row=3, column=0, padx=10, pady=10)
+        self.add_second_button.grid(row=3, column=1, padx=10, pady=10)

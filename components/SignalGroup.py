@@ -1,15 +1,21 @@
-import logging
-
 import customtkinter as ctk
 
+# from components.SignalInfo import SignalInfo
+from core.function import (
+    cos_wave,
+    gaussion_wave,
+    generate_x,
+    sin_wave,
+    square_wave,
+    triangle_wave,
+    uniform_wave,
+)
 from utils import sub_window
 
 
 class SignalFormular(ctk.CTkFrame):
     def __init__(self, master, mode, augs: dict[int]):
         super().__init__(master)
-        logging.info(mode)
-        logging.info(augs)
         if mode == "Signal Type":
             text = "The signal type can not be empty."
             sub_window(text)
@@ -18,10 +24,10 @@ class SignalFormular(ctk.CTkFrame):
 
         match mode:
             case "Square Wave":
-                self.text = f"{augs['weight']} * Square Wave(A={augs['A']},w={augs['w']},Duty Ratio={augs['Duty Ratio']})"
+                self.text = f"{augs['weight']} * Square Wave(A={augs['A']},T={augs['T']},Duty Ratio={augs['Duty Ratio']})"
             case "Triangle Wave":
                 self.text = (
-                    f"{augs['weight']} * Triangle Wave(A={augs['A']},w={augs['w']})"
+                    f"{augs['weight']} * Triangle Wave(A={augs['A']},T={augs['T']})"
                 )
             case "Sine Wave":
                 self.text = f"{augs['weight']}*{augs['A']}*sin(2*pi*{augs['w']}*x+{augs['phi']})"
@@ -61,15 +67,17 @@ class SignalGroup(ctk.CTkFrame):
 
         self.label_text = ctk.CTkLabel(self, text=text)
         self.signal_list_frame = ctk.CTkScrollableFrame(self, width=350, height=height)
-        self.generate_button = ctk.CTkButton(self, text="Show")
+        self.generate_button = ctk.CTkButton(
+            self, text="Show", command=self.show_signal
+        )
 
         self.label_text.grid(row=0, column=0, padx=10, pady=10)
         self.signal_list_frame.grid(row=1, column=0, padx=10, pady=10)
         self.generate_button.grid(row=2, column=0, padx=10, pady=10)
 
         self.signal_list: list[SignalFormular] = []
-        self.mode_list = []
-        self.augs_list = []
+        self.mode_list: list = []
+        self.augs_list: list[dict] = []
         self.num = 0
 
     def add_signal(self, mode: str, augs: dict[int | float]):
@@ -86,3 +94,38 @@ class SignalGroup(ctk.CTkFrame):
         self.signal_list.pop()
         self.mode_list.pop()
         self.augs_list.pop()
+        self.num -= 1
+
+    def get_signal_info(self):
+        signal_info_frame = self.master.signal_info
+        info_dict = signal_info_frame.get_signal_info()
+        return info_dict
+
+    def show_signal(self):
+        self.signal = 0
+        info_dict = self.get_signal_info()
+        duration = int(info_dict["Duration/s"])
+        sample_freq = int(info_dict["Sample Freq/Hz"])
+        ax = self.master.my_canvas.plot_1
+        canvas = self.master.my_canvas.Canvas
+
+        t = generate_x(duration, sample_freq)
+        for mode, augs in zip(self.mode_list, self.augs_list):
+            match mode:
+                case "Square Wave":
+                    self.signal += square_wave(t, augs)
+                case "Triangle Wave":
+                    self.signal += triangle_wave(duration, sample_freq, augs)
+                case "Sine Wave":
+                    self.signal += sin_wave(t, augs)
+                case "Cosine Wave":
+                    self.signal += cos_wave(t, augs)
+                case "Uniform":
+                    self.signal += uniform_wave(duration, sample_freq, augs)
+                case "Gaussion":
+                    self.signal += gaussion_wave(duration, sample_freq, augs)
+        ax.plot(t, self.signal)
+        ax.set_xlim([0, 2])
+        # plt.xlim([0, 2])
+        canvas.draw()
+        self.generate_button.configure(state="disabled")

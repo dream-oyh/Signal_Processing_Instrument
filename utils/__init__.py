@@ -1,15 +1,15 @@
 import customtkinter as ctk
 
+SIGNAL_INFO = ["Duration/s", "Sample Freq/Hz"]
+SIGNAL_INFO_VALUE = [10, 100]
 PERIO_AUG_OPTION: list[str] = [
-    "Duration",
-    "Sample Rate",
     "A",
     "w",
     "phi",
     "Duty Ratio",
     "weight",
 ]
-PERIO_DEFAULT_VALUE: list[str] = [100, 0.01, 0, 0, 0, 0, 0.5]
+PERIO_DEFAULT_VALUE: list[str] = [1, 1, 0, 0.5, 1]
 PERIO_SIGNAL_LIST: list[str] = [
     "Square Wave",
     "Triangle Wave",
@@ -17,13 +17,11 @@ PERIO_SIGNAL_LIST: list[str] = [
     "Cosine Wave",
 ]
 RANDOM_AUG_OPTION: list[str] = [
-    "Duration/s",
-    "Sample Frequency/Hz",
     "low",
     "up",
     "weight",
 ]
-RANDOM_DEFAULT_VALUE: list[int | float] = [100, 0.01, 0, 1, 0.5]
+RANDOM_DEFAULT_VALUE: list[int | float] = [0, 1, 1]
 RANDOM_SIGNAL_LIST: list[str] = ["Uniform", "Gaussion"]
 
 

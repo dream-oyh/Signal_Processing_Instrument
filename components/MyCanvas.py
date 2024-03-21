@@ -27,11 +27,15 @@ class MyCanvas(ctk.CTkFrame):
         self.plot_3.set_title("Amplitude Domain Curve")
         self.plot_4.set_title("Time Difference Domain Curve")
 
+
+
         self.Canvas = FigureCanvasTkAgg(self.f, self)
         self.toolbar = MyPlotNavigation(self, self.Canvas)
         self.analyse_button = ctk.CTkButton(self, text="Analyse")
+        self.clear_button = ctk.CTkButton(self, text="Clear")
         self.Canvas.get_tk_widget().grid(
-            row=0, column=0, columnspan=2, padx=10, pady=10
+            row=0, column=0, columnspan=3, padx=10, pady=10
         )
         self.analyse_button.grid(row=2, column=0, padx=10, pady=10)
-        self.toolbar.grid(row=2, column=1, padx=10, pady=10)
+        self.clear_button.grid(row=2, column=1, padx=10,pady=10)
+        self.toolbar.grid(row=2, column=2, padx=10, pady=10)

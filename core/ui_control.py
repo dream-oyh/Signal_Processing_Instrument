@@ -4,9 +4,9 @@ from components.AugEntry import AugmentEntry
 def enable_entry(entry_widgets: list[AugmentEntry]):
     for entry in entry_widgets:
         widget = entry.entry
-        widget.configure(state="normal", text_color="white")
+        widget.configure(state="normal", text_color=("black","white"))
         label = entry.augment_label
-        label.configure(text_color="white")
+        label.configure(text_color=("black","white"))
 
 
 def disable_entry(*entry_widgets: tuple[AugmentEntry]):
