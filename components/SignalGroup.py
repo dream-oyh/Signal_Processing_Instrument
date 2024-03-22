@@ -1,3 +1,5 @@
+import threading
+
 import customtkinter as ctk
 
 # from components.SignalInfo import SignalInfo
@@ -40,7 +42,7 @@ class SignalFormular(ctk.CTkFrame):
             case "Custom Signal":
                 self.text = f"{augs['weight']}*Custom Signal"
 
-        self.label_text = ctk.CTkLabel(self, text=self.text, wraplength=450)
+        self.label_text = ctk.CTkLabel(self, text=self.text, wraplength=200)
         self.delete_button = ctk.CTkButton(
             self,
             text="—",
@@ -66,9 +68,11 @@ class SignalGroup(ctk.CTkFrame):
         super().__init__(master, width=300, height=height)
 
         self.label_text = ctk.CTkLabel(self, text=text)
-        self.signal_list_frame = ctk.CTkScrollableFrame(self, width=350, height=height)
+        self.signal_list_frame = ctk.CTkScrollableFrame(self, width=250, height=height)
         self.generate_button = ctk.CTkButton(
-            self, text="Show", command=self.show_signal
+            self,
+            text="Show",
+            command=lambda: threading.Thread(target=self.show_time_domain).start(),
         )
 
         self.label_text.grid(row=0, column=0, padx=10, pady=10)
@@ -79,6 +83,8 @@ class SignalGroup(ctk.CTkFrame):
         self.mode_list: list = []
         self.augs_list: list[dict] = []
         self.num = 0
+        self.signal = 0
+        self.t = 0
 
     def add_signal(self, mode: str, augs: dict[int | float]):
         self.num += 1
@@ -96,35 +102,33 @@ class SignalGroup(ctk.CTkFrame):
         self.augs_list.pop()
         self.num -= 1
 
-    def get_signal_info(self):
-        signal_info_frame = self.master.signal_info
-        info_dict = signal_info_frame.get_signal_info()
-        return info_dict
+    # def get_signal_info(self):
+    #     signal_info_frame = self.master.signal_info
+    #     return info_dict
 
-    def show_signal(self):
-        self.signal = 0
-        info_dict = self.get_signal_info()
-        duration = int(info_dict["Duration/s"])
-        sample_freq = int(info_dict["Sample Freq/Hz"])
-        ax = self.master.my_canvas.plot_1
+    def show_time_domain(self):
+        self.info_dict = self.master.signal_info.get_signal_info()
+        duration = int(self.info_dict.get("Duration/s", 0))
+        sample_freq = int(self.info_dict.get("Sample Freq/Hz",0))
+        ax = self.master.my_canvas.axes[0, 0]
         canvas = self.master.my_canvas.Canvas
 
-        t = generate_x(duration, sample_freq)
+        self.t = generate_x(duration, sample_freq)
         for mode, augs in zip(self.mode_list, self.augs_list):
             match mode:
                 case "Square Wave":
-                    self.signal += square_wave(t, augs)
+                    self.signal += square_wave(self.t, augs)
                 case "Triangle Wave":
                     self.signal += triangle_wave(duration, sample_freq, augs)
                 case "Sine Wave":
-                    self.signal += sin_wave(t, augs)
+                    self.signal += sin_wave(self.t, augs)
                 case "Cosine Wave":
-                    self.signal += cos_wave(t, augs)
+                    self.signal += cos_wave(self.t, augs)
                 case "Uniform":
                     self.signal += uniform_wave(duration, sample_freq, augs)
                 case "Gaussion":
                     self.signal += gaussion_wave(duration, sample_freq, augs)
-        ax.plot(t, self.signal)
+        ax.plot(self.t, self.signal)
         ax.set_xlim([0, 2])
         # plt.xlim([0, 2])
         canvas.draw()

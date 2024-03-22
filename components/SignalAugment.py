@@ -1,5 +1,3 @@
-import logging
-
 import customtkinter as ctk
 
 from components.AugEntry import AugmentEntry, AugmentEntryGroup
@@ -43,29 +41,25 @@ class SignalAugment(ctk.CTkFrame):
         self.add_second_button.grid(row=3, column=1, padx=10, pady=5)
 
     def add_first_group(self):
-        mode, aug_dict = self.get_signal_info()
-        logging.info(mode, aug_dict)
-        first_group: SignalGroup = self.master.first_group
-        first_group.add_signal(mode, augs=aug_dict)
+        self._add_group(self.master.first_group)
 
     def add_second_group(self):
-        mode, aug_dict = self.get_signal_info()
-        logging.info(mode, aug_dict)
-        second_group: SignalGroup = self.master.second_group
-        second_group.add_signal(mode, augs=aug_dict)
+        self._add_group(self.master.second_group)
 
     def get_signal_info(self):
         aug_list: list[AugmentEntry] = self.augment_group.augment_entry_list
-        mode: str = self.signal_option.get()
         aug_dict = {}
         for aug in aug_list:
             if aug.entry.cget("state") == "normal":
                 key: str = aug.augment_label.cget("text")
                 value: int | float = aug.entry.get()
                 aug_dict[key] = float(value)
-        return mode, aug_dict
+        return aug_dict
 
-    def get_x_info(self):
-        duration = self.augment_group.augment_entry_list[0].get()
-        sample_freq = self.augment_group.augment_entry_list[1].get()
-        return duration, sample_freq
+    def get_signal_mode(self):
+        return self.signal_option.get()
+
+    def _add_group(self, signal_group: SignalGroup):
+        mode = self.get_signal_mode()
+        aug_dict = self.get_signal_info()
+        signal_group.add_signal(mode=mode, augs=aug_dict)

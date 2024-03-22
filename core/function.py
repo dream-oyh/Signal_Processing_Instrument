@@ -10,8 +10,8 @@ def generate_x(duration, sample_freq):
 
 
 def square_wave(t, augs: dict[int | float]):
-    y = signal.square(2 * np.pi / augs["T"] * t)
-    return y * augs["weight"]
+    y = signal.square(2 * np.pi / augs.get("T", 0) * t)
+    return y * augs.get("weight", 0)
 
 
 def triangle_wave(duration, sample_freq, augs: dict[int | float]):
@@ -24,32 +24,50 @@ def triangle_wave(duration, sample_freq, augs: dict[int | float]):
                 r.append(-2 * h * xi / w + 2 * h / w * w)
         return r
 
-    T = int(augs["T"])
-    A = augs["A"]
+    T = int(augs.get("T", 0))
+    A = augs.get("A", 0)
     t1 = np.linspace(0, T, sample_freq * T, endpoint=False)
 
     y = Triangle(t1.tolist(), T, A)
     num = math.floor(duration / T) + 1
     for i in range(num):
         y = np.append(y, y)
-    return y[: duration * sample_freq] * augs["weight"]
+    return y[: duration * sample_freq] * augs.get("weight", 0)
 
 
 def sin_wave(t, augs: dict[int | float]):
-    y = augs["weight"] * augs["A"] * np.sin(2 * np.pi * augs["w"] * t + augs["phi"])
+    y = (
+        augs.get("weight", 0)
+        * augs.get("A", 0)
+        * np.sin(2 * np.pi * augs.get("w", 0) * t + augs.get("phi", 0))
+    )
     return y
 
 
 def cos_wave(t, augs: dict[int | float]):
-    y = augs["weight"] * augs["A"] * np.cos(2 * np.pi * augs["w"] * t + augs["phi"])
+    y = (
+        augs.get("weight", 0)
+        * augs.get("A", 0)
+        * np.cos(2 * np.pi * augs.get("w", 0) * t + augs.get("phi", 0))
+    )
     return y
 
 
 def uniform_wave(duration, sample_freq, augs: dict[int | float]):
-    t = np.round(np.random.uniform(augs["low"], augs["up"], duration * sample_freq), 2)
+    t = np.round(
+        np.random.uniform(
+            augs.get("low", 0), augs.get("up", 0), duration * sample_freq
+        ),
+        2,
+    )
     return t
 
 
 def gaussion_wave(duration, sample_freq, augs: dict[int | float]):
-    t = np.round(np.random.normal(augs["u"], augs["sigma"], duration * sample_freq), 2)
+    t = np.round(
+        np.random.normal(
+            augs.get("u", 0), augs.get("sigma", 0), duration * sample_freq
+        ),
+        2,
+    )
     return t

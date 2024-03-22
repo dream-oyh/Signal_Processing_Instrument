@@ -11,7 +11,3 @@ class SignalInfo(SignalAugment):
         self.signal_option.grid_forget()
         self.add_first_button.grid_forget()
         self.add_second_button.grid_forget()
-
-    def get_signal_info(self):
-        _, info_dict = super().get_signal_info()
-        return info_dict
