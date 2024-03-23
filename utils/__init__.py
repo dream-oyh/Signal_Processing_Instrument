@@ -23,7 +23,12 @@ RANDOM_AUG_OPTION: list[str] = [
 ]
 RANDOM_DEFAULT_VALUE: list[int | float] = [0, 1, 1]
 RANDOM_SIGNAL_LIST: list[str] = ["Uniform", "Gaussion"]
-PROCESS_METHOD = ["Time Domain", "FFT", "Amplitude Domain", "Time Difference Domain"]
+PROCESS_METHOD = [
+    "Time Domain",
+    "FFT",
+    "Amplitude Domain",
+    "Time Difference Domain",
+]
 
 
 def sub_window(text):

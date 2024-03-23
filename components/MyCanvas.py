@@ -29,6 +29,10 @@ class MyCanvas(ctk.CTkFrame):
             self.fft_()
         if self.tabs.get() == PROCESS_METHOD[2]:
             self.amplitude()
+        if self.tabs.get() == PROCESS_METHOD[3]:
+            self.colleration()
+        self.master.first_group.generate_button.configure(state="disabled")
+        self.master.second_group.generate_button.configure(state="disabled")
 
     def fft_(self):
         first_fft = self._fft_caculate(self.first_signal)
@@ -89,6 +93,26 @@ class MyCanvas(ctk.CTkFrame):
         Canvas.draw()
         ax.legend()
 
+    def colleration(self):
+        ax = self.tabs.axes[3]
+        Canvas = self.tabs.Canvas[3]
+        print(type(self.first_signal))
+        print(type(self.second_signal))
+        if (not isinstance(self.first_signal, int)) and (
+            not isinstance(self.second_signal, int)
+        ):
+            corr2 = self._autocorr(self.first_signal, self.second_signal)
+        elif isinstance(self.first_signal, int) and (
+            not isinstance(self.second_signal, int)
+        ):
+            corr2 = self._autocorr(self.second_signal, self.second_signal)
+        elif (not isinstance(self.first_signal, int)) and isinstance(
+            self.second_signal, int
+        ):
+            corr2 = self._autocorr(self.first_signal, self.first_signal)
+        ax.plot(corr2)
+        Canvas.draw()
+
     def _amplitude_analyse(self, data, n):
         data_max = np.max(np.abs(data))
         interval_len = data_max * 2 / n
@@ -109,3 +133,12 @@ class MyCanvas(ctk.CTkFrame):
             return count_num
         else:
             return 0
+
+    def _autocorr(self, x, y):
+        n = len(x)
+        # variance = np.var(x)
+        x = x - np.mean(x)
+        y = y - np.mean(y)
+        r = np.correlate(x, y, mode="full")
+        # result = r / (variance * (np.arange(n, 0, -1)))
+        return r
