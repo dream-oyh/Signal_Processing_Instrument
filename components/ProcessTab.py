@@ -16,10 +16,10 @@ class MyPlotNavigation(ctk.CTkFrame):
 class ProcessTab(ctk.CTkTabview):
     def __init__(self, master):
         super().__init__(master)
-        self.fig = []
+        self.figs = []
         self.axes = []
         self.Canvas = []
-        self.toolbar = []
+        self.toolbars = []
         for method in PROCESS_METHOD:
             self.add(method)
             if method == "FFT":
@@ -55,10 +55,10 @@ class ProcessTab(ctk.CTkTabview):
         return Canvas, toolbar
 
     def _append(self, fig, axes, canvas, toolbar):
-        self.fig.append(fig)
+        self.figs.append(fig)
         self.axes.append(axes)
         self.Canvas.append(canvas)
-        self.toolbar.append(toolbar)
+        self.toolbars.append(toolbar)
 
     def _canvas_grid(self, canvas, toolbar):
         canvas.get_tk_widget().grid(row=0, column=0, padx=10, pady=10)

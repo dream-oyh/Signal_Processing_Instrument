@@ -15,7 +15,7 @@ class MyCanvas(ctk.CTkFrame):
         # self.axes = self.f.subplots(3, 1)
         self.tabs = ProcessTab(self)
         self.analyse_button = ctk.CTkButton(self, text="Analyse", command=self.analyse)
-        self.clear_button = ctk.CTkButton(self, text="Clear")
+        self.clear_button = ctk.CTkButton(self, text="Clear", command=self.clear)
 
         self.tabs.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
         self.analyse_button.grid(row=2, column=0, padx=10, pady=10)
@@ -84,14 +84,12 @@ class MyCanvas(ctk.CTkFrame):
         max2, second_count_list = self._amplitude_analyse(self.second_signal, n)
         ax = self.tabs.axes[2]
         Canvas = self.tabs.Canvas[2]
-        x1 = np.linspace(-int(max1), int(max1), n, endpoint=False)
-        x2 = np.linspace(-int(max2), int(max2), n, endpoint=False)
         if not isinstance(self.first_signal, int):
             ax.bar(range(len(first_count_list)), first_count_list, label="1st signal")
         if not isinstance(self.second_signal, int):
             ax.bar(range(len(second_count_list)), second_count_list, label="2nd signal")
-        Canvas.draw()
         ax.legend()
+        Canvas.draw()
 
     def colleration(self):
         ax = self.tabs.axes[3]
@@ -102,16 +100,30 @@ class MyCanvas(ctk.CTkFrame):
             not isinstance(self.second_signal, int)
         ):
             corr2 = self._autocorr(self.first_signal, self.second_signal)
+            ax.plot(corr2, label="The cross-correlation curve")
         elif isinstance(self.first_signal, int) and (
             not isinstance(self.second_signal, int)
         ):
             corr2 = self._autocorr(self.second_signal, self.second_signal)
+            ax.plot(corr2, label="The self-colleration curve of 2nd signal")
         elif (not isinstance(self.first_signal, int)) and isinstance(
             self.second_signal, int
         ):
             corr2 = self._autocorr(self.first_signal, self.first_signal)
-        ax.plot(corr2)
+            ax.plot(corr2, label="The self-colleration curve of 1st curve")
+        ax.legend()
         Canvas.draw()
+
+    def clear(self):
+        self.master.first_group.generate_button.configure(state="normal")
+        self.master.second_group.generate_button.configure(state="normal")
+        self.tabs.axes[0].cla()
+        self.tabs.axes[1][0].cla()
+        self.tabs.axes[1][1].cla()
+        self.tabs.axes[2].cla()
+        self.tabs.axes[3].cla()
+        for canva in self.tabs.Canvas:
+            canva.draw()
 
     def _amplitude_analyse(self, data, n):
         data_max = np.max(np.abs(data))

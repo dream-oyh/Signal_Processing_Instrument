@@ -128,8 +128,9 @@ class SignalGroup(ctk.CTkFrame):
                     self.signal += uniform_wave(duration, sample_freq, augs)
                 case "Gaussion":
                     self.signal += gaussion_wave(duration, sample_freq, augs)
-        ax.plot(self.t, self.signal)
+        ax.plot(self.t, self.signal, label = self.label_text.cget("text"))
         ax.set_xlim([0, 2])
+        ax.legend()
         canvas.draw()
         self.master.my_canvas.tabs.set(PROCESS_METHOD[0])
         self.generate_button.configure(state="disabled")
