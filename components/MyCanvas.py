@@ -27,6 +27,8 @@ class MyCanvas(ctk.CTkFrame):
         self.second_t, self.second_signal = self._get_signal(self.master.second_group)
         if self.tabs.get() == PROCESS_METHOD[1]:
             self.fft_()
+        if self.tabs.get() == PROCESS_METHOD[2]:
+            self.amplitude()
 
     def fft_(self):
         first_fft = self._fft_caculate(self.first_signal)
@@ -38,12 +40,14 @@ class MyCanvas(ctk.CTkFrame):
                 (self.tabs.axes[1][0], self.tabs.axes[1][1]),
                 self.first_t,
                 first_fft,
+                "1st signal",
             )
         if not isinstance(self.second_signal, int):
             self._fft_draw(
                 (self.tabs.axes[1][0], self.tabs.axes[1][1]),
                 self.second_t,
                 second_fft,
+                "2nd signal",
             )
 
         Canvas.draw()
@@ -61,8 +65,47 @@ class MyCanvas(ctk.CTkFrame):
         else:
             return 0
 
-    def _fft_draw(self, ax: tuple, t, signal):
+    def _fft_draw(self, ax: tuple, t, signal, label):
         N = self.duration * self.sample_freq
         freq = fftfreq(t.shape[0], 1 / 80)
-        ax[0].plot(freq[freq > 0], np.abs(signal[freq > 0] / N))
-        ax[1].plot(freq[freq > 0], np.angle(signal[freq > 0] / N))
+        ax[0].plot(freq[freq > 0], np.abs(signal[freq > 0] / N), label=label)
+        ax[0].legend()
+        ax[1].plot(freq[freq > 0], np.angle(signal[freq > 0] / N), label=label)
+        ax[1].legend()
+
+    def amplitude(self):
+        n = 100
+        max1, first_count_list = self._amplitude_analyse(self.first_signal, n)
+        print(first_count_list)
+        max2, second_count_list = self._amplitude_analyse(self.second_signal, n)
+        ax = self.tabs.axes[2]
+        Canvas = self.tabs.Canvas[2]
+        x1 = np.linspace(-int(max1), int(max1), n, endpoint=False)
+        x2 = np.linspace(-int(max2), int(max2), n, endpoint=False)
+        if not isinstance(self.first_signal, int):
+            ax.bar(range(len(first_count_list)), first_count_list, label="1st signal")
+        if not isinstance(self.second_signal, int):
+            ax.bar(range(len(second_count_list)), second_count_list, label="2nd signal")
+        Canvas.draw()
+        ax.legend()
+
+    def _amplitude_analyse(self, data, n):
+        data_max = np.max(np.abs(data))
+        interval_len = data_max * 2 / n
+        count_num_list = []
+        for i in range(n):
+            low = -data_max + i * interval_len
+            high = -data_max + (i + 1) * interval_len
+            count = self._interval_data_count(data, low, high)
+            count_num_list.append(count)
+        return data_max, count_num_list
+
+    def _interval_data_count(self, datas, low, high):
+        count_num = 0
+        if not isinstance(datas, int):
+            for data in datas:
+                if data >= low and data <= high:
+                    count_num += 1
+            return count_num
+        else:
+            return 0

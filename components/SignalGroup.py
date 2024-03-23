@@ -12,7 +12,7 @@ from core.function import (
     triangle_wave,
     uniform_wave,
 )
-from utils import sub_window
+from utils import PROCESS_METHOD, sub_window
 
 
 class SignalFormular(ctk.CTkFrame):
@@ -130,6 +130,6 @@ class SignalGroup(ctk.CTkFrame):
                     self.signal += gaussion_wave(duration, sample_freq, augs)
         ax.plot(self.t, self.signal)
         ax.set_xlim([0, 2])
-        ax.set_ylim([-augs.get("A") - 5, augs.get("A") + 5])
         canvas.draw()
+        self.master.my_canvas.tabs.set(PROCESS_METHOD[0])
         self.generate_button.configure(state="disabled")
