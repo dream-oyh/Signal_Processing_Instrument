@@ -26,7 +26,7 @@ class SignalComboBox(ctk.CTkComboBox):
                 change_label_name(aug_list[1], "w")
                 disable_entry(aug_list[3])
             case "Square Wave":
-                change_label_name(aug_list[1], "T")
+                change_label_name(aug_list[1], "w")
                 disable_entry(aug_list[2])
             case "Uniform":
                 change_label_name(aug_list[0], "low")

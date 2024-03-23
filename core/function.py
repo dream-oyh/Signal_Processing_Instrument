@@ -2,15 +2,16 @@ import math
 
 import numpy as np
 from scipy import signal
+from scipy.fftpack import fftfreq
 
 
 def generate_x(duration, sample_freq):
-    t = np.linspace(0, duration, sample_freq * duration, endpoint=False)
+    t = np.linspace(0, duration, sample_freq * duration)
     return t
 
 
 def square_wave(t, augs: dict[int | float]):
-    y = signal.square(2 * np.pi / augs.get("T", 0) * t)
+    y = signal.square(2 * np.pi * augs.get("w", 0) * t)
     return y * augs.get("weight", 0)
 
 

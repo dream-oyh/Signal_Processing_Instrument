@@ -26,7 +26,7 @@ class SignalFormular(ctk.CTkFrame):
 
         match mode:
             case "Square Wave":
-                self.text = f"{augs['weight']} * Square Wave(A={augs['A']},T={augs['T']},Duty Ratio={augs['Duty Ratio']})"
+                self.text = f"{augs['weight']} * Square Wave(A={augs['A']},w={augs['w']},Duty Ratio={augs['Duty Ratio']})"
             case "Triangle Wave":
                 self.text = (
                     f"{augs['weight']} * Triangle Wave(A={augs['A']},T={augs['T']})"
@@ -109,9 +109,9 @@ class SignalGroup(ctk.CTkFrame):
     def show_time_domain(self):
         self.info_dict = self.master.signal_info.get_signal_info()
         duration = int(self.info_dict.get("Duration/s", 0))
-        sample_freq = int(self.info_dict.get("Sample Freq/Hz",0))
-        ax = self.master.my_canvas.axes[0, 0]
-        canvas = self.master.my_canvas.Canvas
+        sample_freq = int(self.info_dict.get("Sample Freq/Hz", 0))
+        ax = self.master.my_canvas.tabs.axes[0]
+        canvas = self.master.my_canvas.tabs.Canvas[0]
 
         self.t = generate_x(duration, sample_freq)
         for mode, augs in zip(self.mode_list, self.augs_list):
@@ -130,6 +130,6 @@ class SignalGroup(ctk.CTkFrame):
                     self.signal += gaussion_wave(duration, sample_freq, augs)
         ax.plot(self.t, self.signal)
         ax.set_xlim([0, 2])
-        # plt.xlim([0, 2])
+        ax.set_ylim([-augs.get("A") - 5, augs.get("A") + 5])
         canvas.draw()
         self.generate_button.configure(state="disabled")
